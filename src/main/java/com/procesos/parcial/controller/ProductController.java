@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -29,21 +26,25 @@ import java.util.Map;
 public class ProductController {
 
     private final IProductService productService;
-    private final RestTemplate restTemplate;
     private static final String MESSAGE = "message";
 
     @PostMapping("/import")
     public ResponseEntity<Map<String, String>> importAllProducts() {
-        String url = "https://fakestoreapi.com/products/";
-        Product[] product = restTemplate.getForObject(url, Product[].class);
-        List<Product> productList = null;
-        if (product != null) {
-            productList = Arrays.asList(product);
-        }
-        productService.importAllProducts(productList);
+        productService.importAllProducts();
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Collections.singletonMap(MESSAGE, MessageProduct.PRODUCT_IMPORT.getMessage()));
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> createProductById(@PathVariable Long id) {
+        Product product = productService.createProductById(id);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put(MESSAGE, MessageProduct.PRODUCT_CREATED.getMessage());
+        response.put("data", product);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PostMapping("/")
@@ -82,7 +83,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(id, product);
+        productService.updateProduct(id, product);
         if (product == null) {
             throw new NoDataFoundException();
         }
