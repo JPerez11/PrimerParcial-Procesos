@@ -20,4 +20,10 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, "Product not found"));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> illegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(MESSAGE, "Entity must not be null"));
+    }
+
 }

@@ -6,7 +6,9 @@ import com.procesos.parcial.repository.IProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -15,6 +17,7 @@ import java.util.List;
 public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository productRepository;
+    private final RestTemplate restTemplate;
 
     @Override
     public void createProduct(Product product) {
@@ -22,8 +25,20 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void importAllProducts(List<Product> productList) {
+    public void importAllProducts() {
+        String url = "https://fakestoreapi.com/products/";
+        Product[] product = restTemplate.getForObject(url, Product[].class);
+        assert product != null;
+        List<Product> productList =  Arrays.asList(product);
         productRepository.saveAll(productList);
+    }
+
+    @Override
+    public Product createProductById(Long id) {
+        String url = "https://fakestoreapi.com/products/"+id;
+        Product product = restTemplate.getForObject(url, Product.class);
+        assert product != null;
+        return productRepository.save(product);
     }
 
     @Override
