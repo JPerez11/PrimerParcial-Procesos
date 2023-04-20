@@ -20,14 +20,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Product controller class.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
 public class ProductController {
 
+    /**
+     * Product Service interface injection.
+     */
     private final IProductService productService;
+
+    /**
+     * Constant message
+     */
     private static final String MESSAGE = "message";
 
+    /**
+     * Method post to import all products from the API.
+     * @return ResponseEntity with the status and message.
+     */
     @PostMapping("/import")
     public ResponseEntity<Map<String, String>> importAllProducts() {
         productService.importAllProducts();
@@ -36,6 +50,11 @@ public class ProductController {
                 .body(Collections.singletonMap(MESSAGE, MessageProduct.PRODUCT_IMPORT.getMessage()));
     }
 
+    /**
+     * Method post to import a product from the API.
+     * @param id Product identifier.
+     * @return ResponseEntity with the status, message and product data.
+     */
     @PostMapping("/{id}")
     public ResponseEntity<Map<String, Object>> createProductById(@PathVariable Long id) {
         Product product = productService.createProductById(id);
@@ -47,6 +66,11 @@ public class ProductController {
                 .body(response);
     }
 
+    /**
+     * Method post to create a product by the customer.
+     * @param product Instance of Product class.
+     * @return ResponseEntity with the status and message.
+     */
     @PostMapping("/")
     public ResponseEntity<Map<String, String>> createProduct(@RequestBody Product product) {
         productService.createProduct(product);
@@ -55,6 +79,10 @@ public class ProductController {
                 .body(Collections.singletonMap(MESSAGE, MessageProduct.PRODUCT_CREATED.getMessage()));
     }
 
+    /**
+     * Method get to obtain all products.
+     * @return ResponseEntity with the status, message and list products.
+     */
     @GetMapping("/")
     public ResponseEntity<Map<String, Object>> getAllProducts() {
         List<Product> productList = productService.getAllProducts();
@@ -68,6 +96,11 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Method get to obtain a Product by id.
+     * @param id Product identifier.
+     * @return ResponseEntity with the status, message and product data.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
@@ -81,6 +114,12 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Method put to update a Product by id with the customer's data.
+     * @param id Product identifier.
+     * @param product Instance Product class.
+     * @return ResponseEntity with the status and message.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         productService.updateProduct(id, product);

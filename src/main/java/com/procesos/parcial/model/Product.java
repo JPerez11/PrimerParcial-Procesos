@@ -11,6 +11,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Model that represents a Product in the app and the db.
+ */
 @Entity
 @Table(name = "PRODUCT")
 @Getter
@@ -19,6 +22,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Product {
 
+    /**
+     * class attributes.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
