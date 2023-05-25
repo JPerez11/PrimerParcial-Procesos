@@ -1,8 +1,9 @@
-package com.procesos.parcial.service;
+package com.procesos.parcial.service.impl;
 
 import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.model.Product;
 import com.procesos.parcial.repository.IProductRepository;
+import com.procesos.parcial.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
