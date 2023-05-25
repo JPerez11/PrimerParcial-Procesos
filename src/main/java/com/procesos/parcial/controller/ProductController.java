@@ -4,6 +4,7 @@ import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.messages.MessageProduct;
 import com.procesos.parcial.model.Product;
 import com.procesos.parcial.service.IProductService;
+import com.procesos.parcial.util.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,11 +35,6 @@ public class ProductController {
     private final IProductService productService;
 
     /**
-     * Constant message
-     */
-    private static final String MESSAGE = "message";
-
-    /**
      * Method post to import all products from the API.
      * @return ResponseEntity with the status and message.
      */
@@ -47,7 +43,7 @@ public class ProductController {
         productService.importAllProducts();
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap(MESSAGE, MessageProduct.PRODUCT_IMPORT.getMessage()));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, MessageProduct.PRODUCT_IMPORT.getMessage()));
     }
 
     /**
@@ -59,8 +55,8 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> createProductById(@PathVariable Long id) {
         Product product = productService.createProductById(id);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put(MESSAGE, MessageProduct.PRODUCT_CREATED.getMessage());
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put(Constants.MESSAGE_KEY, MessageProduct.PRODUCT_CREATED.getMessage());
         response.put("data", product);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(response);
@@ -76,7 +72,7 @@ public class ProductController {
         productService.createProduct(product);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap(MESSAGE, MessageProduct.PRODUCT_CREATED.getMessage()));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, MessageProduct.PRODUCT_CREATED.getMessage()));
     }
 
     /**
@@ -89,9 +85,9 @@ public class ProductController {
         if (productList == null || productList.isEmpty()) {
             throw new NoDataFoundException();
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put(MESSAGE, MessageProduct.PRODUCT_LIST.getMessage());
-        response.put("data", productList);
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put(Constants.MESSAGE_KEY, MessageProduct.PRODUCT_LIST.getMessage());
+        response.put(Constants.DATA_KEY, productList);
 
         return ResponseEntity.ok(response);
     }
@@ -107,9 +103,9 @@ public class ProductController {
         if (product == null) {
             throw new NoDataFoundException();
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put(MESSAGE, MessageProduct.PRODUCT_FIND.getMessage());
-        response.put("data", product);
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put(Constants.MESSAGE_KEY, MessageProduct.PRODUCT_FIND.getMessage());
+        response.put(Constants.DATA_KEY, product);
 
         return ResponseEntity.ok(response);
     }
@@ -126,10 +122,11 @@ public class ProductController {
         if (product == null) {
             throw new NoDataFoundException();
         }
-        Map<String, Object> response = new HashMap<>();
-        response.put(MESSAGE, MessageProduct.PRODUCT_UPDATED.getMessage());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Collections.singletonMap(
+                        Constants.MESSAGE_KEY,
+                        MessageProduct.PRODUCT_UPDATED.getMessage()
+        ));
     }
 
 

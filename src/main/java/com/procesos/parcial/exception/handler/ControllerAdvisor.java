@@ -3,6 +3,7 @@ package com.procesos.parcial.exception.handler;
 import com.procesos.parcial.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.procesos.parcial.util.Constants;
@@ -16,6 +17,11 @@ import java.util.Map;
 @ControllerAdvice
 public class ControllerAdvisor {
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonMap(Constants.MESSAGE_ERROR_KEY, Constants.WRONG_CREDENTIALS_MESSAGE));
+    }
     /**
      * Method to throw exception if no data found.
      * @param ex An instance of  the NoDataFoundException class that extends RuntimeException.
@@ -24,7 +30,7 @@ public class ControllerAdvisor {
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<Map<String, String>> handleNoDataFoundException(NoDataFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(Constants.MESSAGE_KEY, "Product not found"));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, Constants.PRODUCT_NOT_FOUND_MESSAGE));
     }
 
     /**
@@ -35,7 +41,7 @@ public class ControllerAdvisor {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> illegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(Constants.MESSAGE_KEY, "Entity must not be null"));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, Constants.ILLEGAL_ARGUMENT_MESSAGE));
     }
 
 }

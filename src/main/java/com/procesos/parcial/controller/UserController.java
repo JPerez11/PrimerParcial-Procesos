@@ -3,6 +3,7 @@ package com.procesos.parcial.controller;
 import com.procesos.parcial.messages.MessageUser;
 import com.procesos.parcial.model.User;
 import com.procesos.parcial.service.IUserService;
+import com.procesos.parcial.util.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class UserController {
         userService.saveUser(user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap("message", MessageUser.USER_CREATED.getMessage()));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, MessageUser.USER_CREATED.getMessage()));
     }
 
     @GetMapping("/getById/{id}")
@@ -42,7 +43,7 @@ public class UserController {
     public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user, @PathVariable Long id) {
         userService.updateUser(user, id);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap("message", MessageUser.USER_UPDATED.getMessage()));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, MessageUser.USER_UPDATED.getMessage()));
     }
 
 }

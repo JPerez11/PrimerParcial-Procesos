@@ -1,6 +1,7 @@
 package com.procesos.parcial.configuration.security;
 
 import com.procesos.parcial.configuration.security.jwt.JwtAuthorizationFilter;
+import com.procesos.parcial.configuration.security.jwt.JwtEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class MainSecurity {
+
+    private final JwtEntryPoint jwtEntryPoint;
 
     @Bean
     public JwtAuthorizationFilter jwtTokenFilter() {
@@ -48,6 +51,8 @@ public class MainSecurity {
                         session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .exceptionHandling( handle ->
+                        handle.authenticationEntryPoint(jwtEntryPoint))
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
