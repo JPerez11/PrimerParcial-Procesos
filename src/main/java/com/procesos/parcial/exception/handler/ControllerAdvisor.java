@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.procesos.parcial.util.Constants;
 
 import java.util.Collections;
 import java.util.Map;
@@ -16,11 +17,6 @@ import java.util.Map;
 public class ControllerAdvisor {
 
     /**
-     * Constant message.
-     */
-    public static final String MESSAGE = "message";
-
-    /**
      * Method to throw exception if no data found.
      * @param ex An instance of  the NoDataFoundException class that extends RuntimeException.
      * @return ResponseEntity with the status and message.
@@ -28,7 +24,7 @@ public class ControllerAdvisor {
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<Map<String, String>> handleNoDataFoundException(NoDataFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(MESSAGE, "Product not found"));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, "Product not found"));
     }
 
     /**
@@ -39,7 +35,7 @@ public class ControllerAdvisor {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> illegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(MESSAGE, "Entity must not be null"));
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, "Entity must not be null"));
     }
 
 }
