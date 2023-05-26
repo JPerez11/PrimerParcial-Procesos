@@ -51,7 +51,7 @@ public class ControllerAdvisor {
      */
     @ExceptionHandler(ProductAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> productAlreadyExistsException(ProductAlreadyExistsException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Collections.singletonMap(Constants.MESSAGE_KEY, Constants.PRODUCT_ALREADY_EXISTS_MESSAGE));
     }
 

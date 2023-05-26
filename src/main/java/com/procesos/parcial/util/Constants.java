@@ -12,5 +12,7 @@ public class Constants {
     public static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found";
     public static final String PRODUCT_ALREADY_EXISTS_MESSAGE = "Product already exists";
     public static final String ILLEGAL_ARGUMENT_MESSAGE = "Entity must not be null";
+    public static final String ACCESS_TOKEN_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXvCJ9";
+    public static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 3600L;
 
 }

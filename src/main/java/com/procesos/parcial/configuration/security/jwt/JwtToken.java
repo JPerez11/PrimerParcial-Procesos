@@ -15,13 +15,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import java.util.Date;
 
+import static com.procesos.parcial.util.Constants.ACCESS_TOKEN_SECRET;
+import static com.procesos.parcial.util.Constants.ACCESS_TOKEN_VALIDITY_SECONDS;
+
 /**
  * Class to create the token and extract its data.
  */
 public class JwtToken {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtToken.class);
-    private static final String ACCESS_TOKEN_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXvCJ9";
-    private static final Long ACCESS_TOKEN_VALIDITY_SECONDS = 3600L;
 
     private JwtToken () {}
 

@@ -3,8 +3,11 @@ package com.procesos.parcial.service.impl;
 import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.exception.ProductAlreadyExistsException;
 import com.procesos.parcial.model.Product;
+import com.procesos.parcial.model.User;
 import com.procesos.parcial.repository.IProductRepository;
+import com.procesos.parcial.repository.IUserRepository;
 import com.procesos.parcial.service.IProductService;
+import com.procesos.parcial.util.ExtractAuthorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,7 @@ public class ProductServiceImpl implements IProductService {
      * Repository Constructor Injection.
      */
     private final IProductRepository productRepository;
+    private final IUserRepository userRepository;
 
     /**
      * RestTemplate Constructor Injection
@@ -46,6 +50,8 @@ public class ProductServiceImpl implements IProductService {
         Product[] product = restTemplate.getForObject(url, Product[].class);
         // Verify that null is not coming
         assert product != null;
+        Long id = ExtractAuthorization.getAuthenticatedUserId();
+        User user = userRepository.findUserById(id);
         // The list is converted to an ArrayList
         List<Product> productList =  Arrays.asList(product);
         for (Product prod :
@@ -53,6 +59,7 @@ public class ProductServiceImpl implements IProductService {
             if (productRepository.existsById(prod.getId())) {
                 throw new ProductAlreadyExistsException();
             }
+            prod.setUser(user);
         }
         // Products are saved.
         productRepository.saveAll(productList);
@@ -69,6 +76,9 @@ public class ProductServiceImpl implements IProductService {
         if (productRepository.existsById(product.getId())) {
             throw new ProductAlreadyExistsException();
         }
+        Long idUser = ExtractAuthorization.getAuthenticatedUserId();
+        User user = userRepository.findUserById(idUser);
+        product.setUser(user);
         // Product is saved
         return productRepository.save(product);
     }
