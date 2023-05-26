@@ -1,6 +1,7 @@
 package com.procesos.parcial.service.impl;
 
 import com.procesos.parcial.exception.NoDataFoundException;
+import com.procesos.parcial.exception.ProductAlreadyExistsException;
 import com.procesos.parcial.model.Product;
 import com.procesos.parcial.repository.IProductRepository;
 import com.procesos.parcial.service.IProductService;
@@ -47,6 +48,12 @@ public class ProductServiceImpl implements IProductService {
         assert product != null;
         // The list is converted to an ArrayList
         List<Product> productList =  Arrays.asList(product);
+        for (Product prod :
+                productList) {
+            if (productRepository.existsById(prod.getId())) {
+                throw new ProductAlreadyExistsException();
+            }
+        }
         // Products are saved.
         productRepository.saveAll(productList);
     }
@@ -59,6 +66,9 @@ public class ProductServiceImpl implements IProductService {
         Product product = restTemplate.getForObject(url, Product.class);
         // Verify that null is not coming
         assert product != null;
+        if (productRepository.existsById(product.getId())) {
+            throw new ProductAlreadyExistsException();
+        }
         // Product is saved
         return productRepository.save(product);
     }

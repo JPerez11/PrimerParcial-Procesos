@@ -1,6 +1,7 @@
 package com.procesos.parcial.exception.handler;
 
 import com.procesos.parcial.exception.NoDataFoundException;
+import com.procesos.parcial.exception.ProductAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -42,6 +43,16 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> illegalArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(Constants.MESSAGE_KEY, Constants.ILLEGAL_ARGUMENT_MESSAGE));
+    }
+    /**
+     * Method to throw exception if there is an illegal argument.
+     * @param ex Instance ProductAlreadyExistsException class.
+     * @return ResponseEntity with the status and message.
+     */
+    @ExceptionHandler(ProductAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> productAlreadyExistsException(ProductAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Collections.singletonMap(Constants.MESSAGE_KEY, Constants.PRODUCT_ALREADY_EXISTS_MESSAGE));
     }
 
 }
