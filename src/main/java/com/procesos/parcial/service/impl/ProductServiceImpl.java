@@ -2,6 +2,8 @@ package com.procesos.parcial.service.impl;
 
 import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.exception.ProductAlreadyExistsException;
+import com.procesos.parcial.exception.ProductNotBelongUserException;
+import com.procesos.parcial.exception.UserNotFoundException;
 import com.procesos.parcial.model.Product;
 import com.procesos.parcial.model.User;
 import com.procesos.parcial.repository.IProductRepository;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Product service class that implements the methods of the interface.
@@ -38,6 +41,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void createProduct(Product product) {
+        if (!userRepository.existsById(product.getUser().getId())) {
+            throw new UserNotFoundException();
+        }
         // Product is saved
         productRepository.save(product);
     }
@@ -49,7 +55,9 @@ public class ProductServiceImpl implements IProductService {
         // A list of the Products is obtained by the RestTemplate query
         Product[] product = restTemplate.getForObject(url, Product[].class);
         // Verify that null is not coming
-        assert product != null;
+        if (product == null) {
+            throw new NoDataFoundException();
+        }
         Long id = ExtractAuthorization.getAuthenticatedUserId();
         User user = userRepository.findUserById(id);
         // The list is converted to an ArrayList
@@ -72,7 +80,9 @@ public class ProductServiceImpl implements IProductService {
         // The Product is obtained by the RestTemplate query
         Product product = restTemplate.getForObject(url, Product.class);
         // Verify that null is not coming
-        assert product != null;
+        if (product == null) {
+            throw new NoDataFoundException();
+        }
         if (productRepository.existsById(product.getId())) {
             throw new ProductAlreadyExistsException();
         }
@@ -112,11 +122,9 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void updateProduct(Long id, Product product) {
         // The product is searched
-        Product productToUpdate = productRepository.findProductById(id);
-        // Verify that null is not coming
-        if (productToUpdate == null) {
-            // Exception is thrown
-            throw new NoDataFoundException();
+        Product productToUpdate = productRepository.findById(id).orElseThrow(NoDataFoundException::new);
+        if (!Objects.equals(productToUpdate.getUser().getId(), ExtractAuthorization.getAuthenticatedUserId())) {
+            throw new ProductNotBelongUserException();
         }
 
         // The old data is replaced with the customer data
