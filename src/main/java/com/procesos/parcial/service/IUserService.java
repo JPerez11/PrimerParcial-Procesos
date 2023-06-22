@@ -1,18 +1,17 @@
 package com.procesos.parcial.service;
 
-import com.procesos.parcial.model.User;
+import com.procesos.parcial.dto.UserRequestDto;
+import com.procesos.parcial.dto.UserResponseDto;
 
 import java.util.List;
 
 public interface IUserService {
 
-    void saveUser(User user);
+    void saveUser(UserRequestDto user);
 
-    List<User> getAllUsers();
+    List<UserResponseDto> getAllUsers();
 
-    User getOneUser(User user);
+    UserResponseDto getUserById(Long id);
 
-    User getUserById(Long id);
-
-    void updateUser(User user, Long id);
+    void updateUser(UserRequestDto user, Long id);
 }

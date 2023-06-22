@@ -5,6 +5,11 @@ import com.procesos.parcial.messages.MessageProduct;
 import com.procesos.parcial.model.Product;
 import com.procesos.parcial.service.IProductService;
 import com.procesos.parcial.util.Constants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +32,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
+@SecurityRequirement(name = "jwt")
 public class ProductController {
 
     /**
@@ -38,6 +44,14 @@ public class ProductController {
      * Method post to import all products from the API.
      * @return ResponseEntity with the status and message.
      */
+    @Operation(summary = "Import all product from API",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "All product are saved",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "409", description = "Product already exists",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping("/import")
     public ResponseEntity<Map<String, String>> importAllProducts() {
         productService.importAllProducts();
@@ -51,6 +65,14 @@ public class ProductController {
      * @param id Product identifier.
      * @return ResponseEntity with the status, message and product data.
      */
+    @Operation(summary = "Add a product from the API",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Product created",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "409", description = "Product already exists",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping("/{id}")
     public ResponseEntity<Map<String, Object>> createProductById(@PathVariable Long id) {
         Product product = productService.createProductById(id);
@@ -67,6 +89,14 @@ public class ProductController {
      * @param product Instance of Product class.
      * @return ResponseEntity with the status and message.
      */
+    @Operation(summary = "Add a product",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Product created",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "409", description = "Product already exists",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping("/")
     public ResponseEntity<Map<String, String>> createProduct(@RequestBody Product product) {
         productService.createProduct(product);
@@ -79,6 +109,14 @@ public class ProductController {
      * Method get to obtain all products.
      * @return ResponseEntity with the status, message and list products.
      */
+    @Operation(summary = "Get a product",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Product returned",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Product.class))),
+                    @ApiResponse(responseCode = "404", description = "No data found",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @GetMapping("/")
     public ResponseEntity<Map<String, Object>> getAllProducts() {
         List<Product> productList = productService.getAllProducts();
@@ -97,6 +135,14 @@ public class ProductController {
      * @param id Product identifier.
      * @return ResponseEntity with the status, message and product data.
      */
+    @Operation(summary = "Get a product",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User returned",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Product.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found with provider id",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
@@ -116,6 +162,14 @@ public class ProductController {
      * @param product Instance Product class.
      * @return ResponseEntity with the status and message.
      */
+    @Operation(summary = "Update a product",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Product updated",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "404", description = "Product not found with provider id",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         productService.updateProduct(id, product);

@@ -1,10 +1,15 @@
 package com.procesos.parcial.service.impl;
 
+import com.procesos.parcial.dto.UserRequestDto;
+import com.procesos.parcial.dto.UserResponseDto;
 import com.procesos.parcial.exception.NoDataFoundException;
+import com.procesos.parcial.mapper.IUserRequestMapper;
+import com.procesos.parcial.mapper.IUserResponseMapper;
 import com.procesos.parcial.model.User;
 import com.procesos.parcial.repository.IUserRepository;
 import com.procesos.parcial.service.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,37 +19,35 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final IUserResponseMapper userResponseMapper;
+    private final IUserRequestMapper userRequestMapper;
 
     @Override
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User getOneUser(User user) {
-        User userDb = userRepository.findUserById(user.getId());
-        if (userDb == null) {
-            throw new NoDataFoundException();
+    public void saveUser(UserRequestDto user) {
+        if (user == null) {
+            throw new NullPointerException();
         }
-        return userDb;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(userRequestMapper.toUser(user));
     }
 
     @Override
-    public User getUserById(Long id) {
+    public List<UserResponseDto> getAllUsers() {
+        return userResponseMapper.toResponseList(userRepository.findAll());
+    }
+
+    @Override
+    public UserResponseDto getUserById(Long id) {
         User userDb = userRepository.findUserById(id);
         if (userDb == null) {
             throw new NoDataFoundException();
         }
-        return userDb;
+        return userResponseMapper.toResponse(userDb);
     }
 
     @Override
-    public void updateUser(User user, Long id) {
+    public void updateUser(UserRequestDto user, Long id) {
         User userDb = userRepository.findUserById(id);
         if (userDb == null) {
             throw new NoDataFoundException();
