@@ -9,6 +9,7 @@ public class Constants {
     public static final String DATA_KEY = "data";
     public static final String MESSAGE_ERROR_KEY = "error";
     public static final String WRONG_CREDENTIALS_MESSAGE = "wrong credentials";
+    public static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password";
     public static final String USER_NOT_FOUND_MESSAGE = "User not found";
     public static final String PRODUCT_NOT_BELONG_USER_MESSAGE = "The product does not belong to the user";
     public static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found";

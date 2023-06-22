@@ -2,7 +2,7 @@ package com.procesos.parcial.service.impl;
 
 import com.procesos.parcial.dto.UserRequestDto;
 import com.procesos.parcial.dto.UserResponseDto;
-import com.procesos.parcial.exception.NoDataFoundException;
+import com.procesos.parcial.exception.UserNotFoundException;
 import com.procesos.parcial.mapper.IUserRequestMapper;
 import com.procesos.parcial.mapper.IUserResponseMapper;
 import com.procesos.parcial.model.User;
@@ -34,14 +34,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return userResponseMapper.toResponseList(userRepository.findAll());
+        List<User> list = userRepository.findAll();
+        if (list.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return userResponseMapper.toResponseList(list);
     }
 
     @Override
     public UserResponseDto getUserById(Long id) {
         User userDb = userRepository.findUserById(id);
         if (userDb == null) {
-            throw new NoDataFoundException();
+            throw new UserNotFoundException();
         }
         return userResponseMapper.toResponse(userDb);
     }
@@ -50,7 +54,7 @@ public class UserServiceImpl implements IUserService {
     public void updateUser(UserRequestDto user, Long id) {
         User userDb = userRepository.findUserById(id);
         if (userDb == null) {
-            throw new NoDataFoundException();
+            throw new UserNotFoundException();
         }
         userDb.setName( user.getName() );
         userDb.setLastName( user.getLastName() );

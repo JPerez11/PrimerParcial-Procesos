@@ -1,5 +1,6 @@
 package com.procesos.parcial.exception.handler;
 
+import com.procesos.parcial.exception.IncorrectPasswordException;
 import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.exception.ProductAlreadyExistsException;
 import com.procesos.parcial.exception.ProductNotBelongUserException;
@@ -92,6 +93,17 @@ public class ControllerAdvisor {
     public ResponseEntity<Map<String, String>> userNotFoundException(UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonMap(Constants.MESSAGE_KEY, Constants.USER_NOT_FOUND_MESSAGE));
+    }
+
+    /**
+     * Method to throw exception if incorrect password.
+     * @param ex An instance of  the IncorrectPasswordException class that extends RuntimeException.
+     * @return ResponseEntity with the status and message.
+     */
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public ResponseEntity<Map<String, String>> handleIncorrectPasswordException(IncorrectPasswordException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonMap(Constants.MESSAGE_ERROR_KEY, Constants.INCORRECT_PASSWORD_MESSAGE));
     }
 
 }

@@ -25,10 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @SecurityRequirement(name = "jwt")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final IUserService userService;
-
 
     @Operation(summary = "Get all users",
             responses = {
