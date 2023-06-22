@@ -4,6 +4,12 @@ import com.procesos.parcial.messages.MessageUser;
 import com.procesos.parcial.model.User;
 import com.procesos.parcial.service.IUserService;
 import com.procesos.parcial.util.Constants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +22,33 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
+@SecurityRequirement(name = "jwt")
 public class UserController {
 
     private final IUserService userService;
 
 
+    @Operation(summary = "Get all users",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "All users returned",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+                    @ApiResponse(responseCode = "404", description = "No data found",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @Operation(summary = "Add a new user",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "User created",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Map"))),
+                    @ApiResponse(responseCode = "409", description = "User already exists",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping("/")
     public ResponseEntity<Map<String, String>> saveUser(@RequestBody User user) {
         userService.saveUser(user);
@@ -34,11 +57,24 @@ public class UserController {
                 .body(Collections.singletonMap(Constants.MESSAGE_KEY, MessageUser.USER_CREATED.getMessage()));
     }
 
+    @Operation(summary = "Get a user",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User returned",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+                    @ApiResponse(responseCode = "404", description = "User not found with provider role",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Error")))})
     @GetMapping("/getById/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @Operation(summary = "Update a user",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "User updated",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(ref = "#/components/schemas/Map")))})
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user, @PathVariable Long id) {
         userService.updateUser(user, id);

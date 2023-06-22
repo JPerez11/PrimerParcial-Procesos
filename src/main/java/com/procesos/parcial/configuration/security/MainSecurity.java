@@ -41,7 +41,8 @@ public class MainSecurity {
                 .csrf().disable()
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/auth/login")
+                                .requestMatchers("/auth/login", "/swagger-ui.html",
+                                        "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
