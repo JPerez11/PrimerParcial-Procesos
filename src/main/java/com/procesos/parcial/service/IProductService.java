@@ -1,5 +1,6 @@
 package com.procesos.parcial.service;
 
+import com.procesos.parcial.dto.ProductRequestDto;
 import com.procesos.parcial.model.Product;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface IProductService {
      * Method to create product by client.
      * @param product Instance of Product class.
      */
-    void createProduct(Product product);
+    void createProduct(ProductRequestDto product);
 
     /**
      * Method to create (import) all products from the API.

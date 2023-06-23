@@ -1,5 +1,6 @@
 package com.procesos.parcial.controller;
 
+import com.procesos.parcial.dto.ProductRequestDto;
 import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.messages.MessageProduct;
 import com.procesos.parcial.model.Product;
@@ -100,7 +101,7 @@ public class ProductController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(ref = "#/components/schemas/Error")))})
     @PostMapping("/")
-    public ResponseEntity<Map<String, String>> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Map<String, String>> createProduct(@RequestBody ProductRequestDto product) {
         productService.createProduct(product);
 
         return ResponseEntity.status(HttpStatus.CREATED)

@@ -21,6 +21,7 @@ public class UserResponseMapperImpl implements IUserResponseMapper {
 
         UserResponseDto userResponseDto = new UserResponseDto();
 
+        userResponseDto.setId( user.getId() );
         userResponseDto.setName( user.getName() );
         userResponseDto.setLastName( user.getLastName() );
         userResponseDto.setEmail( user.getEmail() );

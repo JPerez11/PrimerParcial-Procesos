@@ -1,9 +1,11 @@
 package com.procesos.parcial.service.impl;
 
+import com.procesos.parcial.dto.ProductRequestDto;
 import com.procesos.parcial.exception.NoDataFoundException;
 import com.procesos.parcial.exception.ProductAlreadyExistsException;
 import com.procesos.parcial.exception.ProductNotBelongUserException;
 import com.procesos.parcial.exception.UserNotFoundException;
+import com.procesos.parcial.mapper.IProductRequestMapper;
 import com.procesos.parcial.model.Product;
 import com.procesos.parcial.model.User;
 import com.procesos.parcial.repository.IProductRepository;
@@ -33,6 +35,7 @@ public class ProductServiceImpl implements IProductService {
      */
     private final IProductRepository productRepository;
     private final IUserRepository userRepository;
+    private final IProductRequestMapper productRequestMapper;
 
     /**
      * RestTemplate Constructor Injection
@@ -40,12 +43,12 @@ public class ProductServiceImpl implements IProductService {
     private final RestTemplate restTemplate;
 
     @Override
-    public void createProduct(Product product) {
-        if (!userRepository.existsById(product.getUser().getId())) {
+    public void createProduct(ProductRequestDto product) {
+        if (!userRepository.existsById(product.getUserId())) {
             throw new UserNotFoundException();
         }
         // Product is saved
-        productRepository.save(product);
+        productRepository.save(productRequestMapper.toEntity(product));
     }
 
     @Override
