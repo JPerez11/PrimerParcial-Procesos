@@ -38,4 +38,8 @@ public class User {
     @Column(nullable = false)
     private LocalDate birthday;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
 }

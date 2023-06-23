@@ -174,7 +174,8 @@ public class ProductController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(ref = "#/components/schemas/Error")))})
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id,
+                                                             @RequestBody ProductRequestDto product) {
         productService.updateProduct(id, product);
         if (product == null) {
             throw new NoDataFoundException();
@@ -185,7 +186,5 @@ public class ProductController {
                         MessageProduct.PRODUCT_UPDATED.getMessage()
         ));
     }
-
-
 
 }

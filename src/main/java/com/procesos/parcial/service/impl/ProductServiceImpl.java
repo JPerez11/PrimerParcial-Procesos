@@ -123,7 +123,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void updateProduct(Long id, Product product) {
+    public void updateProduct(Long id, ProductRequestDto product) {
         // The product is searched
         Product productToUpdate = productRepository.findById(id).orElseThrow(NoDataFoundException::new);
         if (!Objects.equals(productToUpdate.getUser().getId(), ExtractAuthorization.getAuthenticatedUserId())) {
@@ -137,5 +137,6 @@ public class ProductServiceImpl implements IProductService {
         productToUpdate.setCategory(product.getCategory() );
         productToUpdate.setImage(product.getImage() );
 
+        productRepository.save( productToUpdate );
     }
 }

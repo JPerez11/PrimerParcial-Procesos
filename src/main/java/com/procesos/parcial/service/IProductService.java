@@ -46,6 +46,6 @@ public interface IProductService {
      * @param id Product identifier.
      * @param product Product data.
      */
-    void updateProduct(Long id, Product product);
+    void updateProduct(Long id, ProductRequestDto product);
 
 }
